@@ -20,7 +20,7 @@ function bullet:new(o)
     self.__index = self
     o.frames = {
 	love.graphics.newImage("Frames/Proj/bullet.png"),
-	love.graphics.newImage("Frames/Proj/bullet.png")
+	love.graphics.newImage("Frames/Proj/bullet2.png")
     }
     return o
 end
@@ -36,11 +36,7 @@ function bullet:start (x,y,dir,friendly)
 	yS = vel*math.sin(dir)
 	return xS,yS
     end
-    self.frames = {
-	love.graphics.newImage("Frames/Proj/bullet.png"),
-	love.graphics.newImage("Frames/Proj/bullet2.png")
-    }
-    self.currentFrame = 3
+    self.currentFrame = 1
     self.currentTime = 0
     self.velocity={x=0,y=0}
 end
@@ -77,7 +73,7 @@ function bulletTable:update(dt)
 	    local dx,dy = self[i].getSides(direc)
 	    self[i]:move(dx,dy,dt)
 	    self[i]:animate(dt,0.07)
-	    if self[i].currentFrame <= 3 then
+	    if self[i].currentFrame >= 3 then
 		self[i].currentFrame = 1
 	    end
 	end
@@ -89,8 +85,7 @@ function bulletTable:draw()
     if self[1] ~= 1 then
 	for i,v in  ipairs(self) do
 	    print(self[i].currentFrame)
-	    love.graphics.draw(love.graphics.newImage("Frames/Proj/bullet.png"),self[i].x,self[i].y,self[i].direction,modifier,modifier,4,4)
-	    love.graphics.print("testingbullet",1000,1700)
+	    love.graphics.draw(self[i].frames[self[i].currentFrame],self[i].x,self[i].y,self[i].direction,modifier,modifier,4,4)
 	end
     end
 end

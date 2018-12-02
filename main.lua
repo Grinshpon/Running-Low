@@ -20,7 +20,7 @@ function init()
 		{"1280x1280",function() optionsMenu.setResolution(2) end},
 		{"1920x1920",function() optionsMenu.setResolution(3) end},
 		{"Fullscreen",function() optionsMenu.setResolution(4) end},
-		length = 4,
+		length = 3,
 		selected = 3
 	    }},
 	    {"Sound: On/Off",function() optionsMenu.sound = not optionsMenu.sound end},
@@ -143,7 +143,7 @@ function love.update(dt)
        optionsMenu.isResolutionChanged = not optionsMenu.isResolutionChanged
    end
    if not paused and gameStarted then
-       game.update(dt)
+       game.update(dt,paused)
    end
 end
 
