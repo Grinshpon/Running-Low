@@ -1,5 +1,6 @@
 love.window.setTitle("Running Low")
 love.graphics.setDefaultFilter("nearest", "nearest") --essentially removes interpolations so pixel graphics remain crisp when upscaled
+love.mouse.setCursor(love.mouse.newCursor("Images/g_cursor.png",9,9))
 
 game = require ".game" --main game logic, below is title/options menus plus main loop
 
@@ -154,6 +155,9 @@ function love.keypressed(key)
     end
 end
 
+function love.mousepressed(x,y,button,istouch,presses)
+    game.mousePress(x,y,button)
+end
 
 function love.draw()
     --print(tostring(paused))--DEBUG
