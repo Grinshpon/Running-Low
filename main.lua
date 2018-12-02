@@ -1,7 +1,7 @@
 love.window.setTitle("Running Low")
 love.graphics.setDefaultFilter("nearest", "nearest") --essentially removes interpolations so pixel graphics remain crisp when upscaled
 
-game = require ".game"
+game = require ".game" --main game logic, below is title/options menus plus main loop
 
 paused = nil
 gameStarted = nil
@@ -121,6 +121,7 @@ function love.load()
     love.graphics.setNewFont("Font/uni05_53.ttf",65)
     titleScreen.title = love.graphics.newImage("Images/g_title.png")
     titleScreen.menu.cursor.img = love.graphics.newImage("Images/g_select.png")
+    game.start()
 end
 
 function love.update(dt)
