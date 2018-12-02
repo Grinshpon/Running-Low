@@ -11,7 +11,7 @@ function player:start()
     self.frames[3] = love.graphics.newImage("Frames/Player/player_walk2.png")
     self.frames[4] = love.graphics.newImage("Frames/Player/player_walk3.png")
     self.frames[5] = love.graphics.newImage("Frames/Player/player_walk4.png")
-    self.frames.walk5 = love.graphics.newImage("Frames/Player/player_walk5.png")
+    self.frames.walk5 = love.graphics.newImage("Frames/Player/player_walk5.png")--this frame is never called, but it actually looks better like that, so the bug is now intentional
     self.health = 200
     self.currentFrame = self.frames.idle
     self.currentTime = 0
@@ -21,22 +21,37 @@ function player:start()
     self.gun = {
 	love.graphics.newImage("Frames/Player/gun.png"),
 	love.graphics.newImage("Frames/Player/gunfire.png"),
-	rotation = 0
+	rotation = 0,
+	direction = 1 -- -1= left, 1=right
     }
+    --[[self.bullet = {
+	love.graphics.newImage("Frames/Proj/bullet.png"),
+	love.graphics.newImage("Frames/Proj/bullet2.png"),
+	rotation = 0,
+	x = 0,
+	y = 0,
+	spawn = function(dir)
+	    self.rotation = dir
+    }--]]
 end
 
 function player:shoot(x,y)
-    --shoot code
+    
 end
 
 function player:melee(x,y)
     --melee attack
 end
 
+function player:gunAngle()
+    mX,mY = love.mouse.getPosition()
+    return math.atan2((mY-self.y),(mX-self.x))
+end
+
 function player:update(dt)
     local dvx,dvy,modifier = 0,0,250*(love.graphics.getHeight()/1920) --delta velocity(x) and delta velocity(y) modifier (300,)
     if self.velocity.x ~= 0 or self.velocity.y ~= 0 then
-	player:animate(dt,0.07)
+	self:animate(dt,0.07)
 	if self.currentFrame == 6 then
 	    self.currentFrame = 2
 	end
@@ -63,16 +78,25 @@ function player:update(dt)
     else
 	dvy = dvy+1
     end
-    player:move(dvx*modifier,dvy*modifier,dt)
+    self:move(dvx*modifier,dvy*modifier,dt)
+    self.gun.rotation = self:gunAngle()
+    if self.gun.rotation > 1.56 or self.gun.rotation < -1.56 then
+	self.gun.direction = -1
+    else
+	self.gun.direction = 1
+    end
 end
 
 function player:draw()
     local rH = love.graphics.getHeight()
     local modifier = rH/1920
     local eightMod = 8*modifier
-    love.graphics.draw(self.frames[self.currentFrame],self.x,self.y,0,eightMod,eightMod)
-    love.graphics.draw(self.gun[1],self.x+3*eightMod, self.y+eightMod+31*modifier, self.gun.rotation, eightMod,eightMod,3,1)
-    love.graphics.print(self.velocity.x,200,1200)
+    local dir = self.gun.direction
+    love.graphics.draw(self.frames[self.currentFrame],self.x,self.y,0,dir*eightMod,eightMod,3,5)
+    love.graphics.draw(self.gun[1],self.x, self.y, self.gun.rotation, eightMod,dir*eightMod,2,1) --x+3*eightMod, y+eightMod+31*modifier
+    love.graphics.print(self.gun.rotation,200,1200)
+    love.graphics.print(self.x.." "..self.y,200,1500)
+    love.graphics.print(love.mouse.getX().." "..love.mouse.getY(),200,1700)
 end
 
 return player
