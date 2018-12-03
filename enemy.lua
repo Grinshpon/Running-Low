@@ -11,14 +11,15 @@ function enemy:new(o)
     o.frames[3] = love.graphics.newImage("Frames/Enemy/bot_walk2.png")
     o.frames[4] = love.graphics.newImage("Frames/Enemy/bot_idle.png")
     o.frames[5] = love.graphics.newImage("Frames/Enemy/bot_dead.png")
+    o.frames[6] = love.graphics.newImage("Frames/Enemy/bot_spawn.png")
     return o
 end
 function enemy:start(x,y)
     self.x = x or 700
     self.y = y or 700
     self.velocity={x=0,y=0}
-    self.health = 5
-    self.currentFrame = 2
+    self.health = 1
+    self.currentFrame = 6
     self.currentTime = 0
     self.velocity.limit = 250 --250
     self.dirCount = 0
@@ -57,7 +58,9 @@ function enemy:update(dt,pX,pY)
     local vx,vy = self:getSides(self.rotation)
     if not self.killed then
         self:animate(dt,0.07)
-    	if self.currentFrame > 4 then
+        if self.currentFrame == 6 then
+
+    	elseif self.currentFrame > 4 then
     	    self.currentFrame = 1
     	end
         self:move(vx*modifier,vy*modifier,dt)

@@ -10,6 +10,8 @@ function game.start()
     enemyTable:start()
     game.count = 0
     game.kCount = {}
+    game.spawnCount = 0
+    game.timeTillSpawn = -1
     game.pShoot = false
     game.isPaused = true
     game.epBar = love.graphics.newImage("Images/bar.png")
@@ -25,15 +27,16 @@ end
 
 function game.update(dt,paused)
     --print (tostring(dt))
+    rHModif = rHModif or love.graphics.getHeight()/1920
     game.isPaused = paused
     player:update(dt)
     bulletTable:update(dt)
     enemyTable:update(dt,player.x,player.y)
-    for i,_ in ipairs(bulletTable) do
+    for i,_ in ipairs(bulletTable) do --collision detection
         local bX,bY,pX,pY = bulletTable[i].x,bulletTable[i].y,player.x,player.y
         if math.abs(bX) > love.graphics.getHeight() or math.abs(bY) > love.graphics.getHeight() then
             bulletTable:destroy(i)
-        elseif not bulletTable[i].friendly and math.abs(bX - pX) < 10 and math.abs(bY - pY) < 20 then
+        elseif not bulletTable[i].friendly and math.abs(bX - pX) < 20*rHModif and math.abs(bY - pY) < 25*rHModif then
             player.health = player.health - 5
             bulletTable:destroy(i)
             if playSound then
@@ -43,7 +46,7 @@ function game.update(dt,paused)
             local hit = false
             for i,_ in ipairs(enemyTable.bots) do
                 if not hit then
-                    if math.abs(bX - enemyTable.bots[i].x) < 40 and math.abs(bY - enemyTable.bots[i].y) < 40 then
+                    if math.abs(bX - enemyTable.bots[i].x) < 50*rHModif and math.abs(bY - enemyTable.bots[i].y) < 50*rHModif then
                         enemyTable.bots[i].health = enemyTable.bots[i].health -10
                         bulletTable:destroy(i)
                         hit = true
@@ -83,7 +86,7 @@ function game.update(dt,paused)
     end
 
     for i,_ in ipairs(enemyTable.bots) do
-        if enemyTable.bots[i].shoot then
+        if not enemyTable.bots[i].killed and enemyTable.bots[i].shoot then
             local botX,botY,plX,plY = enemyTable.bots[i].x,enemyTable.bots[i].y,player.x,player.y
             local botDir = enemyTable.bots[i]:playerAngle(plX,plY)
             print(botX..", "..botY)
@@ -91,7 +94,33 @@ function game.update(dt,paused)
             bulletTable:create(botX,botY,botDir,false)
         end
     end
-end
+
+    if game.timeTillSpawn == -1 then --spawn controller
+        game.timeTillSpawn = 3
+        enemyTable:create(1200*rHModif,1200*rHModif)
+    end
+    game.spawnCount = game.spawnCount + dt
+    if game.spawnCount >= game.timeTillSpawn then
+        game.spawnCount = 0
+        game.timeTillSpawn = game.timeTillSpawn - 0.05
+        if game.timeTillSpawn < 1.4 then
+            game.timeTillSpawn = 2.4
+        end
+        local spX,spY = 500,500
+        if player.x > love.graphics.getHeight()*rHModif/2 then
+            spX = 400*rHModif
+        else
+            spX = 1600*rHModif
+        end
+        if player.y > love.graphics.getHeight()*rHModif/2 then
+            spY = 400*rHModif
+        else
+            spY = 1600*rHModif
+        end
+        enemyTable:create(spX,spY)
+    end
+
+end --game.update()
 
 function game.mousePress(x,y,button)
     if not game.isPaused and not game.pShoot then
@@ -99,10 +128,11 @@ function game.mousePress(x,y,button)
 	if button == 1 then
 	    player:shoot()
 	    bulletTable:create(player.x,player.y,player.gun.rotation,true)
-        enemyTable:create(1200,1200) --DEBUGGING
+        --enemyTable:create(1200,1200) --DEBUGGING
 	elseif button == 2 then
 	    player:melee(x,y)
-        enemyTable:destroy(1) --DEBUGGING
+        --enemyTable:create(1200,1200) --DEBUGGING
+        --enemyTable:destroy(1) --DEBUGGING
 	end
     end
 end
