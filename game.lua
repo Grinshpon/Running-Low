@@ -2,10 +2,12 @@ game = {}
 
 player = require (".player")
 bulletTable = require (".bullet")
+enemyTable = require (".enemy")
 
 function game.start()
     player:start()
     bulletTable:start()
+    enemyTable:start()
     game.count = 0
     game.pShoot = false
     game.isPaused = false
@@ -23,6 +25,7 @@ function game.update(dt,paused)
     game.isPaused = paused
     player:update(dt)
     bulletTable:update(dt)
+    enemyTable:update(dt,player.x,player.y)
     if game.pShoot then
 	game.count = game.count + dt
 	if game.count >= 0.2 then
@@ -44,6 +47,7 @@ function game.mousePress(x,y,button)
 	if button == 1 then
 	    player:shoot()
 	    bulletTable:create(player.x,player.y,player.gun.rotation,true)
+        enemyTable:create(1800,1800)
 	elseif button == 2 then
 	    player:melee(x,y)
 	end
@@ -56,6 +60,7 @@ function game.draw()
     love.graphics.print(player.health,5,5+16*modifier)
     player:draw()
     bulletTable:draw()
+    enemyTable:draw()
     for i=1,player.health,1 do
 	if player.health < 33 then
 	    love.graphics.draw(game.EP[3],5+(2*i-1)*modifier,5+modifier,0,modifier,modifier)

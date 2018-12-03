@@ -9,7 +9,7 @@ function entity:start()
     self.currentFrame = 0
     self.currentTime = 0
     self.velocity.limit = 1
-    self.friciton = 1
+    self.friction = 1
 end
 
 function entity:update(dt)
