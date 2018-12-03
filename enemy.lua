@@ -57,7 +57,7 @@ function enemy:update(dt,pX,pY)
     local vx,vy = self:getSides(self.rotation)
     self:move(vx*modifier,vy*modifier,dt)
 
-    if self.dirCount > 5 then
+    if self.dirCount > 0.7 then
         self:changeDirection(pX,pY)
         self.dirCount = 0
     end

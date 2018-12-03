@@ -35,6 +35,18 @@ function entityP:velocityMag() --velocity magnitude
 end
 
 function entityP:move(dx,dy,dt) --tried to add some physics and acceleration for smooth movement, still need to work out the kinks
+    local rH = love.graphics.getHeight()
+    rHM = rH/1920
+    local mod1,mod2,mod3 = 200*rHM,1720*rHM,1700*rHM --values different than original file
+    if self.x < mod1 and dx < 0 then
+        dx = -dx
+    end
+    if self.x > mod2 and dx > 0 then
+        dx = -dx
+    end
+    if self.y < mod1 and dy < 0 or self.y > mod3 and dy > 0 then
+        dy = -dy
+    end
     self.velocity.x = dx
     self.velocity.y = dy
     self.x = self.x + self.velocity.x*dt

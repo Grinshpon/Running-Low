@@ -59,6 +59,18 @@ function entity:move(dx,dy,dt) --tried to add some physics and acceleration for 
 	    self.velocity.y = 0
 	end
     end]]--
+    local rH = love.graphics.getHeight()
+    rHM = rH/1920
+    local mod1,mod2,mod3 = 150*rHM,1770*rHM,1720*rHM
+    if self.x < mod1 and dx < 0 then
+        dx = -dx
+    end
+    if self.x > mod2 and dx > 0 then
+        dx = -dx
+    end
+    if self.y < mod1 and dy < 0 or self.y > mod3 and dy > 0 then
+        dy = -dy
+    end
     self.velocity.x = dx
     self.velocity.y = dy
     self.x = self.x + self.velocity.x*dt

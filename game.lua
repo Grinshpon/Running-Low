@@ -18,6 +18,7 @@ function game.start()
 	love.graphics.newImage("Images/eplow.png")
     }
     game.over = false
+    game.wall = love.graphics.newImage("Images/border.png")
 end
 
 function game.update(dt,paused)
@@ -47,7 +48,7 @@ function game.mousePress(x,y,button)
 	if button == 1 then
 	    player:shoot()
 	    bulletTable:create(player.x,player.y,player.gun.rotation,true)
-        enemyTable:create(1800,1800)
+        enemyTable:create(1200,1200)
 	elseif button == 2 then
 	    player:melee(x,y)
 	end
@@ -55,12 +56,14 @@ function game.mousePress(x,y,button)
 end
 
 function game.draw()
-    local modifier=4*(love.graphics.getHeight()/1920)
-    love.graphics.draw(game.epBar,5,5,0,modifier,modifier)
-    love.graphics.print(player.health,5,5+16*modifier)
+    local height = love.graphics.getHeight()
+    local modifier=4*(height/1920)
+    love.graphics.draw(game.wall,0,0,0,7.5*modifier,7.5*modifier)
     player:draw()
     bulletTable:draw()
     enemyTable:draw()
+    love.graphics.draw(game.epBar,5,5,0,modifier,modifier)
+    love.graphics.print(player.health,5,5+16*modifier)
     for i=1,player.health,1 do
 	if player.health < 33 then
 	    love.graphics.draw(game.EP[3],5+(2*i-1)*modifier,5+modifier,0,modifier,modifier)
