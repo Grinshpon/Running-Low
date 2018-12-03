@@ -31,7 +31,7 @@ function bullet:start (x,y,dir,friendly)
     self.direction = dir
     self.friendly = friendly
     self.getSides = function(dir)
-	local vel=1000
+	local vel=1500
 	xS = vel*math.cos(dir)
 	yS = vel*math.sin(dir)
 	return xS,yS
@@ -54,11 +54,11 @@ function bulletTable:start()
 end
 
 function bulletTable:create(x,y,dir,friendly)
-    print(self[1])
+    --print(self[1])
     local newBullet = bullet:new()
     newBullet:start(x,y,dir,friendly)
     table.insert(self,newBullet)
-    print(self[1])
+    --print(self[1])
     bulletCount = bulletCount+1
 end
 
@@ -78,7 +78,7 @@ function bulletTable:update(dt)
 	for i,_ in ipairs(self) do
 	    local direc = self[i].direction
 	    local dx,dy = self[i].getSides(direc)
-	    self[i]:move(dx,dy,dt)
+	    self[i]:move(dx,dy,dt,false)
 	    self[i]:animate(dt,0.07)
 	    if self[i].currentFrame >= 3 then
 		self[i].currentFrame = 1
@@ -91,7 +91,7 @@ function bulletTable:draw()
     local modifier = 6*(love.graphics.getHeight()/1920)
     if self[1] ~= 1 then
 	for i,v in  ipairs(self) do
-	    print(self[i].currentFrame)
+	    --print(self[i].currentFrame)
 	    love.graphics.draw(self[i].frames[self[i].currentFrame],self[i].x,self[i].y,self[i].direction,modifier,modifier,4,4)
 	end
     end

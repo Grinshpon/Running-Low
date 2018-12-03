@@ -32,7 +32,7 @@ function entity:velocityMag() --velocity magnitude
     return math.sqrt(self.velocity.x*self.velocity.x + self.velocity.y+self.velocity.y)
 end
 
-function entity:move(dx,dy,dt) --tried to add some physics and acceleration for smooth movement, still need to work out the kinks
+function entity:move(dx,dy,dt,pass) --tried to add some physics and acceleration for smooth movement, still need to work out the kinks
 --[[    if dx ~= 0 or dy ~= 0 then
 	if self:velocityMag() < self.velocity.limit then
 	    self.velocity.x = self.velocity.x + dx*dt
@@ -62,14 +62,16 @@ function entity:move(dx,dy,dt) --tried to add some physics and acceleration for 
     local rH = love.graphics.getHeight()
     rHM = rH/1920
     local mod1,mod2,mod3 = 150*rHM,1770*rHM,1720*rHM
-    if self.x < mod1 and dx < 0 then
-        dx = -dx
-    end
-    if self.x > mod2 and dx > 0 then
-        dx = -dx
-    end
-    if self.y < mod1 and dy < 0 or self.y > mod3 and dy > 0 then
-        dy = -dy
+    if pass then
+        if self.x < mod1 and dx < 0 then
+            dx = -dx
+        end
+        if self.x > mod2 and dx > 0 then
+            dx = -dx
+        end
+        if self.y < mod1 and dy < 0 or self.y > mod3 and dy > 0 then
+            dy = -dy
+        end
     end
     self.velocity.x = dx
     self.velocity.y = dy

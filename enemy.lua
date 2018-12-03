@@ -10,6 +10,7 @@ function enemy:new(o)
     o.frames[2] = love.graphics.newImage("Frames/Enemy/bot_idle.png")
     o.frames[3] = love.graphics.newImage("Frames/Enemy/bot_walk2.png")
     o.frames[4] = love.graphics.newImage("Frames/Enemy/bot_idle.png")
+    o.frames[5] = love.graphics.newImage("Frames/Enemy/bot_dead.png")
     return o
 end
 function enemy:start(x,y)
@@ -21,6 +22,8 @@ function enemy:start(x,y)
     self.currentTime = 0
     self.velocity.limit = 250 --250
     self.dirCount = 0
+    self.shootCount = 0
+    self.shoot = false
     self.rotation = 0
 end
 function enemy:shoot()
@@ -50,16 +53,24 @@ end
 function enemy:update(dt,pX,pY)
     self.dirCount = self.dirCount + dt
     self:animate(dt,0.07)
-	if self.currentFrame >= 4 then
+	if self.currentFrame > 4 then
 	    self.currentFrame = 1
 	end
-    local modifier = 250*(love.graphics.getHeight()/1920)
+    local modifier = 275*(love.graphics.getHeight()/1920)
     local vx,vy = self:getSides(self.rotation)
     self:move(vx*modifier,vy*modifier,dt)
 
+    if self.shoot then
+        self.shoot = false
+    end
     if self.dirCount > 0.7 then
         self:changeDirection(pX,pY)
         self.dirCount = 0
+        self.shootCount = self.shootCount +1
+        if self.shootCount == 2 then
+            self.shoot = true
+            self.shootCount = 0
+        end
     end
 
 end
@@ -67,8 +78,8 @@ end
 function enemy:draw()
     local rH = love.graphics.getHeight()
     local modifier = rH/1920
-    local eightMod = 8*modifier
-    love.graphics.draw(self.frames[self.currentFrame],self.x,self.y,0,eightMod,eightMod,4,4)
+    local eightMod = 10*modifier
+    love.graphics.draw(self.frames[self.currentFrame],self.x,self.y,0,eightMod,eightMod,8,8)
 end
 --enemy instances will be stored in enemyTable, and these functions should be called from the table
 

@@ -12,7 +12,7 @@ function player:start()
     self.frames[4] = love.graphics.newImage("Frames/Player/player_walk3.png")
     self.frames[5] = love.graphics.newImage("Frames/Player/player_walk4.png")
     self.frames.walk5 = love.graphics.newImage("Frames/Player/player_walk5.png")--this frame is never called, but it actually looks better like that, so the bug is now intentional
-    self.health = 10
+    self.health = 100
     self.currentFrame = self.frames.idle
     self.currentTime = 0
     self.velocity.limit = 250 --250
@@ -49,7 +49,7 @@ function player:gunAngle()
 end
 
 function player:update(dt)
-    local dvx,dvy,modifier = 0,0,250*(love.graphics.getHeight()/1920) --delta velocity(x) and delta velocity(y) modifier (300,)
+    local dvx,dvy,modifier = 0,0,275*(love.graphics.getHeight()/1920) --delta velocity(x) and delta velocity(y) modifier (300,)
     if self.velocity.x ~= 0 or self.velocity.y ~= 0 then
 	self:animate(dt,0.07)
 	if self.currentFrame == 6 then
@@ -78,7 +78,7 @@ function player:update(dt)
     else
 	dvy = dvy+1
     end
-    self:move(dvx*modifier,dvy*modifier,dt)
+    self:move(dvx*modifier,dvy*modifier,dt,true)
     self.gun.rotation = self:gunAngle()
     if self.gun.rotation > 1.56 or self.gun.rotation < -1.56 then
 	self.gun.direction = -1

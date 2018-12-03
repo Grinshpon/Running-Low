@@ -40,6 +40,16 @@ function game.update(dt,paused)
 	    bulletTable:destroy(i)
 	end
     end
+
+    for i,_ in ipairs(enemyTable.bots) do
+        if enemyTable.bots[i].shoot then
+            local botX,botY,plX,plY = enemyTable.bots[i].x,enemyTable.bots[i].y,player.x,player.y
+            local botDir = enemyTable.bots[i]:playerAngle(plX,plY)
+            print(botX..", "..botY)
+            print(botDir)
+            bulletTable:create(botX,botY,botDir,false)
+        end
+    end
 end
 
 function game.mousePress(x,y,button)
@@ -48,9 +58,10 @@ function game.mousePress(x,y,button)
 	if button == 1 then
 	    player:shoot()
 	    bulletTable:create(player.x,player.y,player.gun.rotation,true)
-        enemyTable:create(1200,1200)
+        enemyTable:create(1200,1200) --DEBUGGING
 	elseif button == 2 then
 	    player:melee(x,y)
+        enemyTable:destroy(1) --DEBUGGING
 	end
     end
 end
