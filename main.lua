@@ -10,8 +10,10 @@ optionsMenu = {resolution=3}
 titleScreen = {}
 gameOverScreen = {}
 keyInputTable = {}
+timeSurvived = 0
 --putting definitions in init function allows you to call love.load() to effectively restart game without closing it
 function init()
+    timeSurvived = 0
     paused = false
     gameStarted = false --one time use variable
 
@@ -136,7 +138,7 @@ function love.load()
 end
 
 function love.update(dt)
-   if optionsMenu.isResolutionChanged then 
+   if optionsMenu.isResolutionChanged then
        if optionsMenu.resolution == 1 then
 	   love.window.setMode(800,800,{resizable=false})
 	   love.graphics.setNewFont("Font/uni05_53.ttf",65*(800/1920))
@@ -154,6 +156,7 @@ function love.update(dt)
    end
    if not paused and gameStarted then
        game.update(dt,paused)
+       timeSurvived = timeSurvived+dt
    end
    if game.over then
        paused = true
@@ -179,7 +182,7 @@ function love.draw()
     if titleScreen.titleShowing and not optionsMenu.showOptions then
 	local tSW = titleScreen.title:getWidth()*(rH/1920)
 	love.graphics.draw(titleScreen.title,mW-tSW/2,0,0,rH/1920,rH/1920) --TITLE SCREEN
-	
+
 	for i=1,titleScreen.menu.length,1 do
 	    love.graphics.print(titleScreen.menu[i][1],mW-200,mH+(i-1)*100)
 	    love.graphics.draw(titleScreen.menu.cursor.img, mW-315, mH+(titleScreen.menu.cursor.pos-1)*100,0,4*(rH/1920),4*(rH/1920))
@@ -193,7 +196,7 @@ function love.draw()
 	    love.graphics.draw(titleScreen.menu.cursor.img, mW-315, mH+(titleScreen.menu.cursor.pos-1)*100,0,4*(rH/1920),4*(rH/1920))
 	end
     elseif gameOverScreen.isGameOver then
-	love.graphics.print(gameOverScreen.text,mW-200,mH)
+	love.graphics.print("You Survived For "..math.floor(timeSurvived).." Seconds",mW-200,mH)
 	love.graphics.print(gameOverScreen[1][1],mW-200,mH+100)
 	love.graphics.draw(titleScreen.menu.cursor.img, mW-315, mH+100,0,4*(rH/1920),4*(rH/1920))
 	titleScreen.menu.cursor.pos=1

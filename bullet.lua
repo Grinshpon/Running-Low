@@ -70,11 +70,11 @@ end
 
 function bulletTable:update(dt)
     if self[1] ~= 1 then
-	for i,_ in ipairs(self) do
+	--[[for i,_ in ipairs(self) do
 	    if math.abs(self[i].x) > love.graphics.getHeight() or math.abs(self[i].y) > love.graphics.getHeight() then
 		self:destroy(i)
-	    end
-	end
+    end--]]
+	--end
 	for i,_ in ipairs(self) do
 	    local direc = self[i].direction
 	    local dx,dy = self[i].getSides(direc)

@@ -27,6 +27,28 @@ function game.update(dt,paused)
     player:update(dt)
     bulletTable:update(dt)
     enemyTable:update(dt,player.x,player.y)
+
+    for i,_ in ipairs(bulletTable) do
+        local bX,bY,pX,pY = bulletTable[i].x,bulletTable[i].y,player.x,player.y
+        if math.abs(bX) > love.graphics.getHeight() or math.abs(bY) > love.graphics.getHeight() then
+            bulletTable:destroy(i)
+        elseif not bulletTable[i].friendly and math.abs(bX - pX) < 10 and math.abs(bY - pY) < 20 then
+            player.health = player.health - 5
+            bulletTable:destroy(i)
+        elseif bulletTable[i].friendly then
+            local hit = false
+            for i,_ in ipairs(enemyTable.bots) do
+                if not hit then
+                    if math.abs(bX - enemyTable.bots[i].x) < 40 and math.abs(bY - enemyTable.bots[i].y) < 40 then
+                        enemyTable.bots[i].health = enemyTable.bots[i].health -10
+                        bulletTable:destroy(i)
+                        hit = true
+                    end
+                end
+            end
+        end
+    end
+
     if game.pShoot then
 	game.count = game.count + dt
 	if game.count >= 0.2 then
