@@ -2,6 +2,8 @@ love.window.setTitle("Running Low")
 love.graphics.setDefaultFilter("nearest", "nearest") --essentially removes interpolations so pixel graphics remain crisp when upscaled
 love.mouse.setCursor(love.mouse.newCursor("Images/g_cursor.png",9,9))
 
+playSound = true
+
 game = require ".game" --main game logic, below is title/options menus plus main loop
 
 paused = nil
@@ -26,7 +28,7 @@ function init()
 		length = 3,
 		selected = 3
 	    }},
-	    {"Sound: On/Off",function() optionsMenu.sound = not optionsMenu.sound end},
+	    {"Sound: On/Off",function() playSound = not playSound end},
 	    --{"Controls","WASD: Movement\nLeft Mouse: Shoot\nRight Mouse: Melee"},
 	    {"Back", function() optionsMenu.showOptions = false; titleScreen.menu.cursor.pos=1; if paused then paused = false end end},
 	    {"Quit", function() love.event.quit() end}, --SHOULD NOT BE RESTART, THAT WAS FOR TESTING PURPOSES (THIS MESSAGE IS FOR ME)

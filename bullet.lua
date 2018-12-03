@@ -43,7 +43,7 @@ end
 
 bulletTable = {}
 bulletCount = 0
-
+shootSound = love.audio.newSource("Sounds/shot.wav","static")
 function bulletTable:start()
     self = {}
     for i,_ in ipairs(self) do
@@ -60,6 +60,10 @@ function bulletTable:create(x,y,dir,friendly)
     table.insert(self,newBullet)
     --print(self[1])
     bulletCount = bulletCount+1
+    if playSound then
+        shootSound:play()
+    end
+
 end
 
 function bulletTable:destroy(n)

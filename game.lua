@@ -19,6 +19,7 @@ function game.start()
     }
     game.over = false
     game.wall = love.graphics.newImage("Images/border.png")
+    game.ouch = love.audio.newSource("Sounds/robot.wav","static")
 end
 
 function game.update(dt,paused)
@@ -35,6 +36,9 @@ function game.update(dt,paused)
         elseif not bulletTable[i].friendly and math.abs(bX - pX) < 10 and math.abs(bY - pY) < 20 then
             player.health = player.health - 5
             bulletTable:destroy(i)
+            if playSound then
+                game.ouch:play()
+            end
         elseif bulletTable[i].friendly then
             local hit = false
             for i,_ in ipairs(enemyTable.bots) do
@@ -43,9 +47,18 @@ function game.update(dt,paused)
                         enemyTable.bots[i].health = enemyTable.bots[i].health -10
                         bulletTable:destroy(i)
                         hit = true
+                        print("bot health: "..enemyTable.bots[i].health)
+                        if playSound then
+                            game.ouch:play()
+                        end
                     end
                 end
             end
+        end
+    end
+    for i,_ in ipairs(enemyTable.bots) do
+        if enemyTable.bots[i].health <= 0 then
+            enemyTable:destroy(i) --replace with :kill(i) when death animation is ready
         end
     end
 
