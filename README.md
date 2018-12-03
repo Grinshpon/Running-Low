@@ -12,4 +12,3 @@ The concept of the game is that you are a stranded robot with limited energy bei
 - WASD -> control movement and menus
 - Space or Enter -> select menu option
 - Left Click -> shoot
-- Right Click -> melee attack
