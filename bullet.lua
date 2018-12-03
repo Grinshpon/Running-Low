@@ -42,9 +42,15 @@ function bullet:start (x,y,dir,friendly)
 end
 
 bulletTable = {}
+bulletCount = 0
 
 function bulletTable:start()
     self = {}
+    for i,_ in ipairs(self) do
+	if math.abs(self[i].x) > love.graphics.getHeight() or math.abs(self[i].y) > love.graphics.getHeight() then
+	    self:destroy(i)
+	end
+    end
 end
 
 function bulletTable:create(x,y,dir,friendly)
@@ -53,17 +59,18 @@ function bulletTable:create(x,y,dir,friendly)
     newBullet:start(x,y,dir,friendly)
     table.insert(self,newBullet)
     print(self[1])
+    bulletCount = bulletCount+1
 end
 
 function bulletTable:destroy(n)
     print("destroyed")
     table.remove(self,n)
+    bulletCount = bulletCount-1
 end
 
 function bulletTable:update(dt)
     if self[1] ~= 1 then
 	for i,_ in ipairs(self) do
-	    print("Direction:"..self[i].direction)
 	    if math.abs(self[i].x) > love.graphics.getHeight() or math.abs(self[i].y) > love.graphics.getHeight() then
 		self:destroy(i)
 	    end

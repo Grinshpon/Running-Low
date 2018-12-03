@@ -12,7 +12,7 @@ function player:start()
     self.frames[4] = love.graphics.newImage("Frames/Player/player_walk3.png")
     self.frames[5] = love.graphics.newImage("Frames/Player/player_walk4.png")
     self.frames.walk5 = love.graphics.newImage("Frames/Player/player_walk5.png")--this frame is never called, but it actually looks better like that, so the bug is now intentional
-    self.health = 200
+    self.health = 10
     self.currentFrame = self.frames.idle
     self.currentTime = 0
     self.velocity.limit = 250 --250
@@ -35,8 +35,8 @@ function player:start()
     }--]]
 end
 
-function player:shoot(x,y)
-    
+function player:shoot()
+    self.health = self.health-1
 end
 
 function player:melee(x,y)
@@ -94,9 +94,6 @@ function player:draw()
     local dir = self.gun.direction
     love.graphics.draw(self.frames[self.currentFrame],self.x,self.y,0,dir*eightMod,eightMod,3,5)
     love.graphics.draw(self.gun[1],self.x, self.y, self.gun.rotation, eightMod,dir*eightMod,2,1) --x+3*eightMod, y+eightMod+31*modifier
-    love.graphics.print(self.gun.rotation,200,1200)
-    love.graphics.print(self.x.." "..self.y,200,1500)
-    love.graphics.print(love.mouse.getX().." "..love.mouse.getY(),200,1700)
 end
 
 return player

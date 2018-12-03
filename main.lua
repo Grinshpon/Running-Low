@@ -8,6 +8,7 @@ paused = nil
 gameStarted = nil
 optionsMenu = {resolution=3}
 titleScreen = {}
+gameOverScreen = {}
 keyInputTable = {}
 --putting definitions in init function allows you to call love.load() to effectively restart game without closing it
 function init()
@@ -43,6 +44,13 @@ function init()
 	length=3, --yeah I know I hardcoded the length and I'm a bad person for it. Fight me. Also the length only goes up to the options, not including the length var or the cursor object. I know I'm dumb
 	cursor={pos=1,img=nil}
     }}
+
+    gameOverScreen = {
+	{"Restart?",function() love.load() end},
+	length = 1,
+	text="You Have Been Shut Down",
+	isGameOver = false
+    }
 
     keyInputTable = {
 	["escape"]=function()
@@ -109,6 +117,8 @@ function init()
 		end
 	    elseif titleScreen.titleShowing then
 		titleScreen.menu[titleScreen.menu.cursor.pos][2]()
+	    elseif gameOverScreen.isGameOver then
+		gameOverScreen[1][2]()
 	    end
 	end,
 	["space"]= function()
@@ -145,6 +155,10 @@ function love.update(dt)
    if not paused and gameStarted then
        game.update(dt,paused)
    end
+   if game.over then
+       paused = true
+       gameOverScreen.isGameOver = true
+   end
 end
 
 function love.keypressed(key)
@@ -178,6 +192,11 @@ function love.draw()
 	    end
 	    love.graphics.draw(titleScreen.menu.cursor.img, mW-315, mH+(titleScreen.menu.cursor.pos-1)*100,0,4*(rH/1920),4*(rH/1920))
 	end
+    elseif gameOverScreen.isGameOver then
+	love.graphics.print(gameOverScreen.text,mW-200,mH)
+	love.graphics.print(gameOverScreen[1][1],mW-200,mH+100)
+	love.graphics.draw(titleScreen.menu.cursor.img, mW-315, mH+100,0,4*(rH/1920),4*(rH/1920))
+	titleScreen.menu.cursor.pos=1
     end
     if not paused and gameStarted then
 	game.draw()
