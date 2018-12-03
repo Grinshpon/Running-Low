@@ -17,7 +17,7 @@ function enemy:start(x,y)
     self.x = x or 700
     self.y = y or 700
     self.velocity={x=0,y=0}
-    self.health = 50
+    self.health = 5
     self.currentFrame = 2
     self.currentTime = 0
     self.velocity.limit = 250 --250
@@ -25,6 +25,7 @@ function enemy:start(x,y)
     self.shootCount = 0
     self.shoot = false
     self.rotation = 0
+    self.killed = false
 end
 function enemy:shoot()
 
@@ -52,13 +53,15 @@ end
 
 function enemy:update(dt,pX,pY)
     self.dirCount = self.dirCount + dt
-    self:animate(dt,0.07)
-	if self.currentFrame > 4 then
-	    self.currentFrame = 1
-	end
     local modifier = 275*(love.graphics.getHeight()/1920)
     local vx,vy = self:getSides(self.rotation)
-    self:move(vx*modifier,vy*modifier,dt)
+    if not self.killed then
+        self:animate(dt,0.07)
+    	if self.currentFrame > 4 then
+    	    self.currentFrame = 1
+    	end
+        self:move(vx*modifier,vy*modifier,dt)
+    end
 
     if self.shoot then
         self.shoot = false
@@ -98,9 +101,15 @@ function enemyTable:destroy(n)
     self.length = self.length -1
 end
 
+function enemyTable:kill(n)
+    self.bots[n].killed = true
+    self.bots[n].currentFrame = 5
+end
+
 function enemyTable:start()
     self.bots = {}
     self.length = 0
+    self.kC = 0
 end
 
 function enemyTable:update(dt,pX,pY)

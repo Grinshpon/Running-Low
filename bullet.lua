@@ -46,10 +46,16 @@ bulletCount = 0
 shootSound = love.audio.newSource("Sounds/shot.wav","static")
 function bulletTable:start()
     self = {}
+    self.todestroy = {}
     for i,_ in ipairs(self) do
 	if math.abs(self[i].x) > love.graphics.getHeight() or math.abs(self[i].y) > love.graphics.getHeight() then
-	    self:destroy(i)
+	    self.todestroy[i] = 1
 	end
+    end
+    for i,_ in ipairs(self.todestroy) do
+        if self.todestroy[i] == 1 then
+            self:destroy(i)
+        end
     end
 end
 

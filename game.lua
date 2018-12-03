@@ -9,8 +9,9 @@ function game.start()
     bulletTable:start()
     enemyTable:start()
     game.count = 0
+    game.kCount = {}
     game.pShoot = false
-    game.isPaused = false
+    game.isPaused = true
     game.epBar = love.graphics.newImage("Images/bar.png")
     game.EP = {
 	love.graphics.newImage("Images/ep.png"),
@@ -28,7 +29,6 @@ function game.update(dt,paused)
     player:update(dt)
     bulletTable:update(dt)
     enemyTable:update(dt,player.x,player.y)
-
     for i,_ in ipairs(bulletTable) do
         local bX,bY,pX,pY = bulletTable[i].x,bulletTable[i].y,player.x,player.y
         if math.abs(bX) > love.graphics.getHeight() or math.abs(bY) > love.graphics.getHeight() then
@@ -58,7 +58,13 @@ function game.update(dt,paused)
     end
     for i,_ in ipairs(enemyTable.bots) do
         if enemyTable.bots[i].health <= 0 then
-            enemyTable:destroy(i) --replace with :kill(i) when death animation is ready
+            enemyTable:kill(i) --replace with :kill(i) when death animation is ready
+            game.kCount[i] = game.kCount[i] or 0
+            game.kCount[i] = game.kCount[i] + dt
+            if game.kCount[i] > 1 then
+                enemyTable:destroy(i)
+                game.kCount[i] = 0
+            end
         end
     end
 
